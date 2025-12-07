@@ -1,20 +1,15 @@
+########################
+# Provider / region
+########################
+
 variable "aws_region" {
-  description = "AWS region to deploy resources"
+  description = "AWS region to deploy resources in"
   type        = string
-  default     = "us-east-1"
 }
 
-variable "lambda_function_name" {
-  description = "Name of the Lambda function"
-  type        = string
-  default     = "low-voltage-agent"
-}
-
-variable "dynamodb_table_name" {
-  description = "DynamoDB table name for storing leads"
-  type        = string
-  default     = "low-voltage-leads-v1"
-}
+########################
+# Google Custom Search
+########################
 
 variable "google_api_key" {
   description = "Google Programmable Search API key"
@@ -22,12 +17,29 @@ variable "google_api_key" {
 }
 
 variable "google_cx" {
-  description = "Google Programmable Search custom search engine ID (CX)"
+  description = "Google Programmable Search CX identifier"
   type        = string
 }
 
-variable "schedule_expression" {
-  description = "CloudWatch schedule expression for running the agent"
+########################
+# Email reporting
+########################
+
+variable "report_email" {
+  description = "Email address to send travel agent summary reports to"
   type        = string
-  default     = "rate(12 hours)"
+}
+
+########################
+# CloudWatch schedules
+########################
+
+variable "schedule_expression_morning" {
+  description = "CloudWatch schedule expression for the morning travel-agent run"
+  type        = string
+}
+
+variable "schedule_expression_evening" {
+  description = "CloudWatch schedule expression for the evening travel-agent run"
+  type        = string
 }
