@@ -1,5 +1,9 @@
+##############################################
+# IAM ROLE FOR LOW VOLTAGE LAMBDA
+##############################################
+
 resource "aws_iam_role" "lambda_role" {
-  name = "travel-agent-lambda-role"
+  name = "low-voltage-agent-lambda-role"
 
   assume_role_policy = jsonencode({
     Version = "2012-10-17"
@@ -15,40 +19,62 @@ resource "aws_iam_role" "lambda_role" {
   })
 }
 
-# Basic Lambda execution (logs)
-resource "aws_iam_role_policy_attachment" "lambda_basic_execution" {
+########################################
+# Basic CloudWatch Logs permissions
+########################################
+
+resource "aws_iam_role_policy_attachment" "lambda_basic_logs" {
   role       = aws_iam_role.lambda_role.name
   policy_arn = "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
 }
 
-# Custom policy: DynamoDB + SES
-resource "aws_iam_role_policy" "lambda_policy" {
-  name = "lambda_dynamodb_ses_policy"
+########################################
+# DynamoDB permissions for low-voltage table
+########################################
+
+resource "aws_iam_role_policy" "lambda_dynamodb_policy" {
+  name = "low-voltage-agent-dynamodb-policy"
   role = aws_iam_role.lambda_role.id
 
   policy = jsonencode({
     Version = "2012-10-17"
     Statement = [
       {
-        Sid    = "DynamoDBAccess"
         Effect = "Allow"
         Action = [
           "dynamodb:PutItem",
           "dynamodb:UpdateItem",
           "dynamodb:GetItem",
-          "dynamodb:DescribeTable"
+          "dynamodb:Scan",
+          "dynamodb:Query"
         ]
-        Resource = aws_dynamodb_table.travel_agent_leads.arn
-      },
+        Resource = aws_dynamodb_table.low_voltage_leads.arn
+      }
+    ]
+  })
+}
+
+########################################
+# SES permissions – reports to you + Omar
+########################################
+
+resource "aws_iam_role_policy" "lambda_ses_policy" {
+  name = "low-voltage-agent-ses-policy"
+  role = aws_iam_role.lambda_role.id
+
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
       {
-        Sid    = "SesSendEmail"
         Effect = "Allow"
         Action = [
           "ses:SendEmail",
           "ses:SendRawEmail"
         ]
-        # Lock to your verified SES identity
-        Resource = "arn:aws:ses:us-east-1:276671279137:identity/tawanmaurice@gmail.com"
+        Resource = [
+          "arn:aws:ses:us-east-1:276671279137:identity/tawanmaurice@gmail.com",
+          "arn:aws:ses:us-east-1:276671279137:identity/oboyd@hdcnetworks.com"
+        ]
       }
     ]
   })

@@ -1,11 +1,13 @@
-########################################
-# DynamoDB table for travel agent leads
-########################################
+##############################################
+# DYNAMODB TABLE FOR LOW-VOLTAGE LEADS
+##############################################
 
-resource "aws_dynamodb_table" "travel_agent_leads" {
-  name         = "travel-agent-leads-v1"
+resource "aws_dynamodb_table" "low_voltage_leads" {
+  # Physical table name in AWS
+  name         = "low-voltage-leads-v1"
   billing_mode = "PAY_PER_REQUEST"
 
+  # Simple primary key
   hash_key = "id"
 
   attribute {
@@ -13,11 +15,8 @@ resource "aws_dynamodb_table" "travel_agent_leads" {
     type = "S"
   }
 
-  table_class = "STANDARD"
-
   tags = {
-    Name        = "travel-agent-leads-v1"
-    Project     = "travel-agent-v1"
-    Environment = "prod"
+    Project = "low-voltage-agent"
+    Owner   = "Tawan"
   }
 }

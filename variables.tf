@@ -22,12 +22,27 @@ variable "google_cx" {
 }
 
 ########################
+# DynamoDB table
+########################
+
+variable "table_name" {
+  description = "DynamoDB table name for low-voltage leads"
+  type        = string
+}
+
+########################
 # Email reporting
 ########################
 
 variable "report_email" {
-  description = "Email address to send travel agent summary reports to"
+  description = "Primary email address for low-voltage reports (Tawan)"
   type        = string
+}
+
+variable "report_email_2" {
+  description = "Secondary email address for low-voltage reports (Omar)"
+  type        = string
+  default     = ""
 }
 
 ########################
@@ -35,11 +50,11 @@ variable "report_email" {
 ########################
 
 variable "schedule_expression_morning" {
-  description = "CloudWatch schedule expression for the morning travel-agent run"
+  description = "Schedule for morning low-voltage run"
   type        = string
 }
 
 variable "schedule_expression_evening" {
-  description = "CloudWatch schedule expression for the evening travel-agent run"
+  description = "Schedule for evening low-voltage run"
   type        = string
 }

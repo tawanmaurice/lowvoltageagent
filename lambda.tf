@@ -1,9 +1,9 @@
 ##############################################
-# LAMBDA FUNCTION
+# LOW VOLTAGE LAMBDA FUNCTION
 ##############################################
 
-resource "aws_lambda_function" "travel_agent" {
-  function_name = "travel-agent-v1"
+resource "aws_lambda_function" "low_voltage_agent" {
+  function_name = "low-voltage-agent"
   role          = aws_iam_role.lambda_role.arn
   handler       = "lambda.lambda_handler"
   runtime       = "python3.12"
@@ -21,8 +21,13 @@ resource "aws_lambda_function" "travel_agent" {
     variables = {
       GOOGLE_API_KEY = var.google_api_key
       GOOGLE_CX      = var.google_cx
-      TABLE_NAME     = aws_dynamodb_table.travel_agent_leads.name
-      REPORT_EMAIL   = var.report_email
+
+      # DynamoDB table name passed as a simple variable
+      TABLE_NAME     = var.table_name
+
+      # Summary emails
+      REPORT_EMAIL   = var.report_email      # you (Tawan)
+      REPORT_EMAIL_2 = var.report_email_2    # Omar
     }
   }
 }
